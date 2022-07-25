@@ -49,6 +49,7 @@ jobs:
           wasm-pack build --release --target web --out-dir ${{ steps.vars.outputs.tmp }}/web
           wasm-pack build --release --target bundler --out-dir ${{ steps.vars.outputs.tmp }}/bundler
           wasm-pack build --release --features=lightweight --out-dir ${{ steps.vars.outputs.tmp }}/lightweight
+          ls -l ${{ steps.vars.outputs.tmp }}/lightweight/
 
       - name: Pushing wasm-js-bindings branch
         run: |
@@ -66,4 +67,4 @@ jobs:
           cp -r ${{ steps.vars.outputs.tmp }}/web ./
           cp -r ${{ steps.vars.outputs.tmp }}/lightweight ./
           
-          ls -l ./
+          ls -l ./lightweight/
