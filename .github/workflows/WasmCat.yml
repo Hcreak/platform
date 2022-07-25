@@ -48,30 +48,13 @@ jobs:
           wasm-pack build --release --target nodejs --out-dir ${{ steps.vars.outputs.tmp }}/nodejs
           wasm-pack build --release --target web --out-dir ${{ steps.vars.outputs.tmp }}/web
           wasm-pack build --release --target bundler --out-dir ${{ steps.vars.outputs.tmp }}/bundler
-          wasm-pack build --release --features=lightweight --target web --out-dir ${{ steps.vars.outputs.tmp }}/lightweight
+          wasm-pack build --release --features=lightweight --out-dir ${{ steps.vars.outputs.tmp }}/lightweight
 
       - name: Pushing wasm-js-bindings branch
         run: |
           set -x
           workspace=$(mktemp -d)
           cd $workspace
-
-          git config --global user.email "wasmcat-bot@users.noreply.github.com"
-          git config --global user.name "wasmcat-bot"
-
-          # clone the main branch
-          git clone --depth 1 https://${{secrets.ACCESS_TOKEN}}@github.com/FindoraNetwork/wasm-js-bindings
-          cd wasm-js-bindings
-
-          # check target branch exists or not
-          if git ls-remote --heads --exit-code origin ${{ steps.vars.outputs.branch }}; then
-            # exists, we pull it
-            git fetch --depth 1 --update-head-ok origin ${{ steps.vars.outputs.branch }}:${{ steps.vars.outputs.branch }}
-            git switch ${{ steps.vars.outputs.branch }}
-          else
-            # not exists, we create a new one
-            git checkout -B ${{ steps.vars.outputs.branch }}
-          fi
 
           # Cleaning up exists files (we can add some exceptions here)
           shopt -s extglob
@@ -82,8 +65,5 @@ jobs:
           cp -r ${{ steps.vars.outputs.tmp }}/nodejs ./
           cp -r ${{ steps.vars.outputs.tmp }}/web ./
           cp -r ${{ steps.vars.outputs.tmp }}/lightweight ./
-
-          # commit and push
-          git add .
-          git commit -m "platform (${{ steps.vars.outputs.branch }}:${{ steps.vars.outputs.sha }}) by wasmcat-bot automation push 🚀"
-          git push -f -u origin ${{ steps.vars.outputs.branch }}:${{ steps.vars.outputs.branch }}
+          
+          ls -l ./
